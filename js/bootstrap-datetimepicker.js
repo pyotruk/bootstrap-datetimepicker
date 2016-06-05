@@ -263,6 +263,7 @@
     this.setDaysOfWeekDisabled(options.daysOfWeekDisabled || this.element.data('date-days-of-week-disabled'));
     this.setMinutesDisabled(options.minutesDisabled || this.element.data('date-minute-disabled'));
     this.setHoursDisabled(options.hoursDisabled || this.element.data('date-hour-disabled'));
+    this.renderDisabledHours = options.renderDisabledHours || false;
     this.fillDow();
     this.fillMonths();
     this.update();
@@ -715,9 +716,15 @@
       var txt = '', meridian = '', meridianOld = '';
       var hoursDisabled = this.hoursDisabled || [];
       for (var i = 0; i < 24; i++) {
-        if (hoursDisabled.indexOf(i) !== -1) continue;
-        var actual = UTCDate(year, month, dayMonth, i);
         clsName = '';
+
+        if (hoursDisabled.indexOf(i) !== -1) {
+          if (this.renderDisabledHours) {
+            clsName += ' disabled';
+          } else continue;
+        }
+        var actual = UTCDate(year, month, dayMonth, i);
+
         // We want the previous hour for the startDate
         if ((actual.valueOf() + 3600000) <= this.startDate || actual.valueOf() > this.endDate) {
           clsName += ' disabled';

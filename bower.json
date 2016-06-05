@@ -1,6 +1,7 @@
 {
-  "name": "smalot-bootstrap-datetimepicker",
+  "name": "pyotruk-bootstrap-datetimepicker",
   "main": ["js/bootstrap-datetimepicker.min.js", "css/bootstrap-datetimepicker.min.css"],
+  "version": "2.3.12",
   "ignore": [
     "build",
     "sample in bootstrap v2",
