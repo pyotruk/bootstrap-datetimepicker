@@ -109,7 +109,9 @@
     this.initialDate = options.initialDate || new Date();
     this.zIndex = options.zIndex || this.element.data('z-index') || undefined;
     this.title = typeof options.title === 'undefined' ? false : options.title;
-    this.defaultTimeZone = (new Date).toString().split('(')[1].slice(0, -1);
+
+    var timezone = (new Date).toString().split('(');
+    this.defaultTimeZone = timezone.length > 1 ? timezone[1].slice(0, -1) : 'MSK';
     this.timezone = options.timezone || this.defaultTimeZone;
 
     this.icons = {
