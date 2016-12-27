@@ -267,6 +267,7 @@
     this.setDaysOfWeekDisabled(options.daysOfWeekDisabled || this.element.data('date-days-of-week-disabled'));
     this.setMinutesDisabled(options.minutesDisabled || this.element.data('date-minute-disabled'));
     this.setHoursDisabled(options.hoursDisabled || this.element.data('date-hour-disabled'));
+    this.setHoursDiscount(options.hoursDiscount || this.element.data('date-hour-discount')); // TODO refactor
     this.renderDisabledHours = options.renderDisabledHours || false;
     this.fillDow();
     this.fillMonths();
@@ -546,6 +547,19 @@
       this.updateNavArrows();
     },
 
+    // TODO refactor
+    setHoursDiscount: function (hoursDiscount) {
+      this.hoursDiscount = hoursDiscount || [];
+      if (!$.isArray(this.hoursDiscount)) {
+        this.hoursDiscount = this.hoursDiscount.split(/,\s*/);
+      }
+      this.hoursDiscount = $.map(this.hoursDiscount, function (d) {
+        return parseInt(d, 10);
+      });
+      this.update();
+      this.updateNavArrows();
+    },
+
     place: function () {
       if (this.isInline) return;
 
@@ -738,6 +752,7 @@
       html = [];
       var txt = '', meridian = '', meridianOld = '';
       var hoursDisabled = this.hoursDisabled || [];
+      var hoursDiscount = this.hoursDiscount || []; // TODO refactor
       for (var i = 0; i < 24; i++) {
         clsName = '';
 
@@ -746,6 +761,12 @@
             clsName += ' disabled';
           } else continue;
         }
+
+        // TODO refactor
+        if (hoursDiscount.indexOf(i) !== -1) {
+          clsName += ' discount';
+        }
+
         var actual = UTCDate(year, month, dayMonth, i);
 
         // We want the previous hour for the startDate
