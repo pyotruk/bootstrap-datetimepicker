@@ -258,10 +258,12 @@
     this.startDate = -Infinity;
     this.endDate = Infinity;
     this.datesDisabled = [];
+    this.datesDiscount = []; // TODO refactor
     this.daysOfWeekDisabled = [];
     this.setStartDate(options.startDate || this.element.data('date-startdate'));
     this.setEndDate(options.endDate || this.element.data('date-enddate'));
     this.setDatesDisabled(options.datesDisabled || this.element.data('date-dates-disabled'));
+    this.setDatesDiscount(options.datesDiscount || this.element.data('date-dates-discount')); // TODO refactor
     this.setDaysOfWeekDisabled(options.daysOfWeekDisabled || this.element.data('date-days-of-week-disabled'));
     this.setMinutesDisabled(options.minutesDisabled || this.element.data('date-minute-disabled'));
     this.setHoursDisabled(options.hoursDisabled || this.element.data('date-hour-disabled'));
@@ -489,6 +491,19 @@
       this.updateNavArrows();
     },
 
+    // TODO refactor
+    setDatesDiscount: function (datesDiscount) {
+      this.datesDiscount = datesDiscount || [];
+      if (!$.isArray(this.datesDiscount)) {
+        this.datesDiscount = this.datesDiscount.split(/,\s*/);
+      }
+      this.datesDiscount = $.map(this.datesDiscount, function (d) {
+        return DPGlobal.parseDate(d, this.format, this.language, this.formatType, this.timezone).toDateString();
+      });
+      this.update();
+      this.updateNavArrows();
+    },
+
     setTitle: function (selector, value) {
       return this.picker.find(selector)
         .find('th:eq(1)')
@@ -706,6 +721,12 @@
 					$.inArray(prevMonth.toDateString(), this.datesDisabled) !== -1) {
           clsName += ' disabled';
         }
+
+        // TODO refactor
+        if ($.inArray(prevMonth.toDateString(), this.datesDiscount) !== -1) {
+          clsName += ' discount';
+        }
+
         html.push('<td class="day' + clsName + '">' + prevMonth.getUTCDate() + '</td>');
         if (prevMonth.getUTCDay() == this.weekEnd) {
           html.push('</tr>');
